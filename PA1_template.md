@@ -16,7 +16,7 @@ data$date = as.Date(data$date)
 
 
 ## What is mean total number of steps taken per day?
-1. Histogram of total number of steps taken each day:
+1. Histogram of total number of steps taken each day (missing value ignored):
 
 ```r
 totalSteps = aggregate(data$steps, list(data$date), sum, na.rm = T)
@@ -56,11 +56,26 @@ qplot(interval, steps, data = avgStep, geom = "line", main = "Average Daily Acti
 
 ```r
 maxSteps = avgStep[which.max(avgStep$steps),]
+maxSteps
+```
+
+```
+##     interval steps
+## 104      835 206.2
 ```
 On average across all the days, maximum steps were taken in 835 interval which is about 207 steps.
 
 ## Imputing missing values
-There are 2304 missing values of steps in the data. Therefore the strategy for filling in all of the missing values in the dataset we use is by replacing the NA's with average value of steps of a day in 5 minutes interval, which is 38 steps per 5 minutes interval.
+There are 2304 missing values of steps in the data. Therefore the strategy for filling in all of the missing values in the dataset we use is by replacing the NA's with average value of steps of a day in 5 minutes interval, which is
+
+```r
+ceiling(mean(avgStep$steps))
+```
+
+```
+## [1] 38
+```
+steps per 5 minutes interval.
 
 We create new dataset with missing data filled in.
 
@@ -76,7 +91,7 @@ itotalSteps = aggregate(newData$steps, list(newData$date), sum)
 hist(itotalSteps$x, main = "Total Steps Taken Each Day", xlab="Total Steps Per Day")
 ```
 
-![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9.png) 
 
 From this summary we can tell the mean and median of total number of steps taken per day
 
@@ -113,6 +128,6 @@ colnames(wdSteps) = c("interval", "wd", "steps")
 qplot(interval, steps, data = wdSteps, geom="line", facets=wd ~ .)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+![plot of chunk unnamed-chunk-12](figure/unnamed-chunk-12.png) 
 
 From the plot above, it seems that there is more steps taken through out the day in the weekend.

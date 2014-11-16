@@ -15,7 +15,7 @@ data$date = as.Date(data$date)
 
 
 ## What is mean total number of steps taken per day?
-1. Histogram of total number of steps taken each day:
+1. Histogram of total number of steps taken each day (missing value ignored):
 ```{r}
 totalSteps = aggregate(data$steps, list(data$date), sum, na.rm = T)
 hist(totalSteps$x, main = "Total Steps Taken Each Day", xlab="Total Steps Per Day")
@@ -41,11 +41,16 @@ qplot(interval, steps, data = avgStep, geom = "line", main = "Average Daily Acti
 
 ``` {r}
 maxSteps = avgStep[which.max(avgStep$steps),]
+maxSteps
 ```
 On average across all the days, maximum steps were taken in `r maxSteps$interval` interval which is about `r ceiling(maxSteps$steps)` steps.
 
 ## Imputing missing values
-There are `r sum(is.na(data$steps))` missing values of steps in the data. Therefore the strategy for filling in all of the missing values in the dataset we use is by replacing the NA's with average value of steps of a day in 5 minutes interval, which is `r ceiling(mean(avgStep$steps))` steps per 5 minutes interval.
+There are `r sum(is.na(data$steps))` missing values of steps in the data. Therefore the strategy for filling in all of the missing values in the dataset we use is by replacing the NA's with average value of steps of a day in 5 minutes interval, which is
+```{r}
+ceiling(mean(avgStep$steps))
+``` 
+steps per 5 minutes interval.
 
 We create new dataset with missing data filled in.
 ``` {r}
